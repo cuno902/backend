@@ -21,7 +21,7 @@ app.get("/", (req, res) => {
 
 app.use(express.json()); 
 app.use(cors({
-    origin: allowedOrigins,
+    origin: '*',
     methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allowed HTTP methods
     allowedHeaders: ['Content-Type', 'Authorization'] // Allowed headers
 }));
