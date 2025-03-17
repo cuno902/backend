@@ -24,7 +24,8 @@ app.use('/api/users', userRoutes);
 app.use('/api/products', productRouter)
 app.use('/api/types', typeRouter);
 app.use('/api/cart', cartRouter)
-app.listen(3000, () => {
+const PORT = process.env.PORT || 3000
+app.listen(PORT, () => {
     connectDb();
     console.log("Server chạy trên http://localhost:3000");
 });
