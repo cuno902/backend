@@ -15,7 +15,11 @@ app.get("/", (req, res) => {
 })
 
 app.use(express.json()); 
-app.use(cors()); 
+app.use(cors({
+    origin: '*', // Allow all origins
+    methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allowed HTTP methods
+    allowedHeaders: ['Content-Type', 'Authorization'] // Allowed headers
+}));
 app.use('/api/users', userRoutes); 
 app.use('/api/products', productRouter)
 app.use('/api/types', typeRouter);
