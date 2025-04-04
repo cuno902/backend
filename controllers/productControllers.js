@@ -54,7 +54,7 @@ export const getProductsByType = async (req, res) => {
 
 export const createProduct = async (req, res) => {
     try {
-        const { name, description, price, material, weight, stock, type } = req.body;
+        const { name, description, price, material, stock, type } = req.body;
         const imageUrl = req.file ? req.file.path : null;
 
         if (!mongoose.Types.ObjectId.isValid(type)) {
@@ -71,7 +71,6 @@ export const createProduct = async (req, res) => {
             description,
             price,
             material,
-            weight,
             imageUrl,
             stock,
             type
@@ -86,7 +85,7 @@ export const createProduct = async (req, res) => {
 
 export const updateProduct = async (req, res) => {
     try {
-        const { name, description, price, material, weight, stock } = req.body;
+        const { name, description, price, material, stock } = req.body;
         const imageUrl = req.file ? req.file.path : undefined;
 
         const updatedProduct = await Product.findByIdAndUpdate(
@@ -96,7 +95,6 @@ export const updateProduct = async (req, res) => {
                 description, 
                 price, 
                 material, 
-                weight, 
                 stock, 
                 imageUrl 
             },
