@@ -15,7 +15,23 @@ export const registerUser = async (req, res) => {
     if (!username || !email || !password) {
         return res.status(400).json({ message: 'Phải điền tất cả thông tin' });
     }
-    
+
+    if (typeof username !== 'string' || username.trim() === '') {
+        return res.status(400).json({ message: 'Tên không hợp lệ' });
+    }
+    if (typeof email !== 'string' || email.trim() === '' || !email.includes('@')) {
+        return res.status(400).json({ message: 'Email không hợp lệ' });
+    }
+
+    const user = await User.findOne({ email });
+    if (user) {
+        return res.status(400).json({ message: 'Email đã có người dùng' });
+    }
+
+    const usernameexist = await User.findOne({ username });
+    if (usernameexist) {
+        return res.status(400).json({ message: 'Username đã có người dùng' });
+    }
 
     if (typeof password !== 'string' || password.trim() === '') {
         return res.status(400).json({ message: 'Mật khẩu không hợp lệ' });
@@ -35,7 +51,7 @@ export const registerUser = async (req, res) => {
     res.status(201).json({ message: 'Đăng kí user thành công' });
 
     } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(400).json({ message: error.message });
     }
 };
 
@@ -173,3 +189,41 @@ export const getUserById = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+
+export const changeUserPassword = async (req, res) => {
+    try {
+         if (req.user.role !== 'admin' && req.user.id !== req.params.id) {
+            return res.status(403).json({ message: 'Không có quyền truy cập' });
+        }
+
+        const user = await User.findById(req.user.id); 
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+        const { oldPassword, newPassword } = req.body;
+        if (!oldPassword || !newPassword) {
+            return res.status(400).json({ message: 'Phải điền tất cả thông tin' });
+        }
+        const isMatch = await bcrypt.compare(oldPassword, user.password);
+        if (!isMatch) return res.status(400).json({ message: 'Không đúng mật khẩu cũ' });
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(newPassword, salt);
+        user.password = hashedPassword;
+        await user.save();
+        res.json({ message: 'Đổi mật khẩu thành công' });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
+export const getUserProfile = async (req, res) => {
+    try {
+        const user = await User.findById(req.user.id).select('-password'); 
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+        res.json(user);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
