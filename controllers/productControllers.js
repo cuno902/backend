@@ -30,6 +30,32 @@ export const getAllProducts = async (req, res) => {
     }
 };
 
+export const getLatestProducts = async (req, res) => {
+    try {
+        const products = await Product.find({})
+            .populate("type")
+            .sort({ createdAt: -1 }) 
+            .limit(10);              
+
+        res.json(products);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+export const getHottestProducts = async (req, res) => {
+    try {
+        const products = await Product.find({})
+            .populate("type")
+            .sort({ createdAt: 1 })  
+            .limit(10);              
+
+        res.json(products);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
 
 export const getProductById = async (req, res) => {
     try {
