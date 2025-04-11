@@ -47,7 +47,7 @@ export const getHottestProducts = async (req, res) => {
     try {
         const products = await Product.find({})
             .populate("type")
-            .sort({ createdAt: 1 })  
+            .sort({ quantity: 1 }) 
             .limit(10);              
 
         res.json(products);
