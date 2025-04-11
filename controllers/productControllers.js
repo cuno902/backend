@@ -47,9 +47,8 @@ export const getHottestProducts = async (req, res) => {
     try {
         const products = await Product.find({})
             .populate("type")
-            .sort({ quantity: 1 }) 
+            .sort({ stock: 1 }) 
             .limit(10);              
-
         res.json(products);
     } catch (error) {
         res.status(500).json({ message: error.message });
