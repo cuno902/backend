@@ -12,7 +12,7 @@ const app = express();
 
 const allowedOrigins = [
     'http://localhost:3000', // Allow frontend running locally
-    'https://frontend-96lz.onrender.com' // Allow deployed frontend
+    'https://frontend-1v3d.onrender.com' // Allow deployed frontend
 ];
 
 app.get("/", (req, res) => {
